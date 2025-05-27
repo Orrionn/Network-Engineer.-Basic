@@ -127,6 +127,8 @@ R1(config)#
 ### Шаг 1. Назначьте IPv6-адреса интерфейсам Ethernet на R1.
 #### a.	Назначьте глобальные индивидуальные IPv6-адреса, указанные в таблице адресации обоим интерфейсам Ethernet на R1
 ![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/IPv6_fo_G00.png?raw=true)
+
+
 ![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/IPv6_fo_G01.png?raw=true)
 
 #### b.	Введите команду show ipv6 interface brief, чтобы проверить, назначен ли каждому интерфейсу корректный индивидуальный IPv6-адрес.
@@ -135,6 +137,7 @@ R1(config)#
 
 #### c.	Чтобы обеспечить соответствие локальных адресов канала индивидуальному адресу, вручную введите локальные адреса канала на каждом интерфейсе Ethernet на R1.
 ![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/LLA_G00.png?raw=true)
+
 ![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/LLA_G01.png?raw=true)
 >####Примечание. Каждый интерфейс маршрутизатора относится к отдельной сети. Пакеты с локальным адресом канала никогда не выходят за пределы локальной сети, а значит, для обоих интерфейсов можно указывать один и тот же локальный адрес канала.
 
