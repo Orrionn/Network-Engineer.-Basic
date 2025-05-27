@@ -6,22 +6,143 @@
 
 ## Часть 1. Настройка топологии и конфигурация основных параметров маршрутизатора и коммутатора
 ### Шаг 1. Настройте маршрутизатор.
-#### Подсоедините консольный кабель, как показано в топологии. На данном этапе не подключайте кабель Ethernet компьютера PC-A.
+#### Назначьте имя хоста и настройте основные параметры устройства.
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/topologi.png?raw=true)
 
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/1.png?raw=true)
+
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/2.png?raw=true)
+
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/3.png?raw=true)
+
+```
+S1#show run
+Building configuration...
+
+Current configuration : 1246 bytes
+!
+version 15.0
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname S1
+!
+enable secret 5 $1$mERr$9cTjUIEqNGurQiFU.ZeCi1
+!
+!
+!
+no ip domain-lookup
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+interface FastEthernet0/1
+!
+interface FastEthernet0/2
+!
+interface FastEthernet0/3
+!
+interface FastEthernet0/4
+!
+interface FastEthernet0/24
+!
+interface GigabitEthernet0/1
+!
+interface GigabitEthernet0/2
+!
+interface Vlan1
+no ip address
+shutdown
+!
+banner motd ^C!!!!STOP!!!^C
+!
+!
+!
+line con 0
+password 7 0822404F1A0A
+logging synchronous
+login
+!
+line vty 0 4
+login
+line vty 5 15
+password 7 0822455D0A16
+login
+```
 ### Шаг 2. Настройте коммутатор.
-
+#### Назначьте имя хоста и настройте основные параметры устройства
+```
+Router>
+Router>en
+Router#
+Router#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Router(config)#
+Router(config)#ser
+Router(config)#service pas
+Router(config)#service password-encryption 
+Router(config)#ena
+Router(config)#enable sec
+Router(config)#enable secret cisco
+Router(config)#
+Router(config)#ban
+Router(config)#banner mo
+Router(config)#banner motd #!!!!!Go away!!!!#
+Router(config)#
+Router(config)#no ip
+Router(config)#no ip d
+Router(config)#no ip domain-l
+Router(config)#no ip domain-lookup 
+Router(config)#
+Router(config)#line co
+Router(config)#line console 0
+Router(config-line)#
+Router(config-line)#pas
+Router(config-line)#password cisco
+Router(config-line)#
+Router(config-line)#logg
+Router(config-line)#logging syn
+Router(config-line)#logging synchronous 
+Router(config-line)#
+Router(config-line)#login
+Router(config-line)#
+Router(config-line)#exit
+Router(config)#
+Router(config)#line
+Router(config)#line vt
+Router(config)#line vty 5 15
+Router(config-line)#
+Router#
+Router#CONF T
+Enter configuration commands, one per line. End with CNTL/Z.
+Router(config)#
+Router(config)#host
+Router(config)#hostname R1
+R1(config)#
+```
 ## Часть 2. Ручная настройка IPv6-адресов
 ### Шаг 1. Назначьте IPv6-адреса интерфейсам Ethernet на R1.
 #### a.	Назначьте глобальные индивидуальные IPv6-адреса, указанные в таблице адресации обоим интерфейсам Ethernet на R1
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/IPv6_fo_G00.png?raw=true)
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/IPv6_fo_G01.png?raw=true)
+
 #### b.	Введите команду show ipv6 interface brief, чтобы проверить, назначен ли каждому интерфейсу корректный индивидуальный IPv6-адрес.
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/show_int_brief.png?raw=true)
 >####Примечание. Отображаемый локальный адрес канала основан на адресации EUI-64, которая автоматически использует MAC-адрес интерфейса для создания 128-битного локального IPv6-адреса канала.
 
 #### c.	Чтобы обеспечить соответствие локальных адресов канала индивидуальному адресу, вручную введите локальные адреса канала на каждом интерфейсе Ethernet на R1.
-Примечание. Каждый интерфейс маршрутизатора относится к отдельной сети. Пакеты с локальным адресом канала никогда не выходят за пределы локальной сети, а значит, для обоих интерфейсов можно указывать один и тот же локальный адрес канала.
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/LLA_G00.png?raw=true)
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/LLA_G01.png?raw=true)
+>####Примечание. Каждый интерфейс маршрутизатора относится к отдельной сети. Пакеты с локальным адресом канала никогда не выходят за пределы локальной сети, а значит, для обоих интерфейсов можно указывать один и тот же локальный адрес канала.
 
 #### d.	Используйте выбранную команду, чтобы убедиться, что локальный адрес связи изменен на fe80::1.  
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/show_int_brief.png?raw=true)
 
 >#### Какие группы многоадресной рассылки назначены интерфейсу G0/0?
+>![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/groups.png?raw=true)
 > На интерфейс G0/0 назначены 2 многоадрессные рассылки.
  Адрес мультикастовой рассылки FF02::1 работает как broadcast в IPv4, т.е. при отправке запроса на данный адрес, его примут все устройства в локальной сети.
  FF02::1:FF – это мультикастоый адрес, на который автоматически подписываются все узлы. После неизменной части FF02::1:FF оставшиеся 24 бита берутся с ip которые настроены на интерфейсе. Взята она со следующего ip: 2001:DB8:ACAD:A::1(2001:DB8:ACAD:A:0000:0000:0000:1000). 
@@ -35,7 +156,7 @@
 
 
 #### b.	Активируйте IPv6-маршрутизацию на R1 с помощью команды IPv6 unicast-routing.
-
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/IPv6_unicast-routing.png?raw=true)
 >####Примечание. Это позволит компьютерам получать IP-адреса и данные шлюза по умолчанию с помощью функции SLAAC (Stateless Address Autoconfiguration (Автоконфигурация без сохранения состояния адреса)).
 
 #### c.	Теперь, когда R1 входит в группу многоадресной рассылки всех маршрутизаторов, еще раз введите команду ipconfig на PC-B. Проверьте данные IPv6-адреса.
