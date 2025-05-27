@@ -174,6 +174,7 @@ R1(config)#
 
 #### c.	Теперь, когда R1 входит в группу многоадресной рассылки всех маршрутизаторов, еще раз введите команду ipconfig на PC-B. Проверьте данные IPv6-адреса.
 ####Сначала необходимо включить автоматическое получение IPv6 адресов. И т.к. ранее был настроен LLA, то шлюз по умолчанию определился автоматически.
+
 ![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/Automatic_IPv6.png?raw=true)
 
 ![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/ipconfig_B.png?raw=true)
@@ -183,6 +184,7 @@ R1(config)#
 
 ### Шаг 3. Назначьте IPv6-адреса интерфейсу управления (SVI) на S1.
 #### a.	Назначьте адрес IPv6 для S1. Также назначьте этому интерфейсу локальный адрес канала fe80::b.
+
 ![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/S1.png?raw=true)
 
 ![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/IPv6_S1.png?raw=true)
@@ -197,19 +199,33 @@ R1(config)#
 
 ![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/IPv6_PC-B.png?raw=true)
 
-![](
-
-![](
-
 #### b.	Убедитесь, что оба компьютера имеют правильную информацию адреса IPv6. Каждый компьютер должен иметь два глобальных адреса IPv6: один статический и один SLACC.
 >####Примечание. При выполнении работы в среде Cisco Packet Tracer установите статический и SLACC адреса на компьютеры последовательно, отразив результаты в отчете
 
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/IPv6_PC-A_static.png?raw=true)
+
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/IPv6_PC-B_static.png?raw=true)
+
 ## Часть 3. Проверка сквозного подключения
 #### С PC-A отправьте эхо-запрос на FE80::1. Это локальный адрес канала, назначенный G0/1 на R1.
+
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/echo_reply_PC-A.png?raw=true)
+
 #### Отправьте эхо-запрос на интерфейс управления S1 с PC-A.
+
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/echo_reply_S1.png?raw=true)
+
 #### Введите команду tracert на PC-A, чтобы проверить наличие сквозного подключения к PC-B.
+
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/tracert.png?raw=true)
+
 #### С PC-B отправьте эхо-запрос на PC-A.
+
+
+
 #### С PC-B отправьте эхо-запрос на локальный адрес канала G0/0 на R1.
+
+
 >####Примечание.  В случае отсутствия сквозного подключения проверьте, правильно ли указаны IPv6-адреса на всех устройствах.
 
 ## Вопросы для повторения
