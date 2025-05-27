@@ -221,12 +221,13 @@ R1(config)#
 
 #### С PC-B отправьте эхо-запрос на PC-A.
 
-
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/echo_reply_PC-B.png?raw=true)
 
 #### С PC-B отправьте эхо-запрос на локальный адрес канала G0/0 на R1.
 
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab4/pic/echo_reply_S1+G00.png?raw=true)
 
->####Примечание.  В случае отсутствия сквозного подключения проверьте, правильно ли указаны IPv6-адреса на всех устройствах.
+>#### Примечание. В случае отсутствия сквозного подключения проверьте, правильно ли указаны IPv6-адреса на всех устройствах.
 
 ## Вопросы для повторения
 
