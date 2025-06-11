@@ -428,8 +428,75 @@ S1#
 
 ## 	Вопрос для повторения
 >#### Как предоставить доступ к сетевому устройству нескольким пользователям, у каждого из которых есть собственное имя пользователя?
->
+>Для каждого пользователя нужно создать свою учетную запись с необходимыми привилегиями уровней 0-15, где 15 - привилегии администратора, 1 - минимальный уровень привилегий.
+>Например, помимо созданного ранее пользователя admin мы создадим еще пользователя operator с минимальным уровнем привилегий:
+```
+S1#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+S1(config)#
+S1(config)#user
+S1(config)#username user
+S1(config)#username user1 pr
+S1(config)#username user1 privilege ?
+  <0-15>  User privilege level
+S1(config)#username user1 privilege 0 sec
+S1(config)#username user1 privilege 0 secret qwerty
+S1(config)#^Z
+S1#
+%SYS-5-CONFIG_I: Configured from console by console
 
+S1#ssh -l user1 192.168.1.1
+
+Password: 
+
+STOP!!!
+
+R1>
+```
+```
+S1#ssh -l admin 192.168.1.1
+Password: 
+
+STOP!!!
+
+R1#?
+Exec commands:
+  <1-99>      Session number to resume
+  auto        Exec level Automation
+  clear       Reset functions
+  clock       Manage the system clock
+  configure   Enter configuration mode
+  connect     Open a terminal connection
+  copy        Copy from one file to another
+  debug       Debugging functions (see also 'undebug')
+  delete      Delete a file
+  dir         List files on a filesystem
+  disable     Turn off privileged commands
+  disconnect  Disconnect an existing network connection
+  enable      Turn on privileged commands
+  erase       Erase a filesystem
+  exit        Exit from the EXEC
+  logout      Exit from the EXEC
+  mkdir       Create new directory
+  more        Display the contents of a file
+  no          Disable debugging informations
+  ping        Send echo messages
+  reload      Halt and perform a cold restart
+  resume      Resume an active network connection
+  rmdir       Remove existing directory
+  send        Send a message to other tty lines
+  setup       Run the SETUP command facility
+  show        Show running system information
+  ssh         Open a secure shell client connection
+  telnet      Open a telnet connection
+  terminal    Set terminal line parameters
+  traceroute  Trace route to destination
+  undebug     Disable debugging functions (see also 'debug')
+  vlan        Configure VLAN parameters
+  write       Write running configuration to memory, network, or terminal
+R1#
+```
+>
 
 
 
