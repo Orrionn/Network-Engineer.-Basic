@@ -9,30 +9,80 @@
 ## Часть 1. Настройка основных параметров устройств
 В части 1 потребуется настроить топологию сети и основные параметры, такие как IP-адреса интерфейсов, доступ к устройствам и пароли на маршрутизаторе
 ### Шаг 1. Создайте сеть согласно топологии.
+
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab5/img/topogi.jpg?raw=true)
+
 ### Шаг 2. Выполните инициализацию и перезагрузку маршрутизатора и коммутатора.
 ### Шаг 3. Настройте маршрутизатор.
 #### a.	Подключитесь к маршрутизатору с помощью консоли и активируйте привилегированный режим EXEC.
-#### b.	Войдите в режим конфигурации.
-#### c.	Отключите поиск DNS, чтобы предотвратить попытки маршрутизатора неверно преобразовывать введенные команды таким образом, как будто они являются именами узлов.
-#### d.	Назначьте class в качестве зашифрованного пароля привилегированного режима EXEC.
-#### e.	Назначьте cisco в качестве пароля консоли и включите вход в систему по паролю.
-#### f.	Назначьте cisco в качестве пароля VTY и включите вход в систему по паролю.
-#### g.	Зашифруйте открытые пароли.
-#### h.	Создайте баннер, который предупреждает о запрете несанкционированного доступа.
-#### i.	Настройте и активируйте на маршрутизаторе интерфейс G0/0/1, используя информацию, приведенную в таблице адресации.
-#### j.	Сохраните текущую конфигурацию в файл загрузочной конфигурации.
-
->#### Немного забежала вперед, задала имя коммутатору - S1
 ```
 Router>
 Router>en
 Router#
+```
+#### b.	Войдите в режим конфигурации.
+```
 Router#conf t
 Enter configuration commands, one per line.  End with CNTL/Z.
 Router(config)#
+```
+#### c.	Отключите поиск DNS, чтобы предотвратить попытки маршрутизатора неверно преобразовывать введенные команды таким образом, как будто они являются именами узлов.
+```
+Router(config)#no ip domain-lookup
+Router(config)#
+```
+#### d.	Назначьте class в качестве зашифрованного пароля привилегированного режима EXEC.
+>#### Немного забежала вперед, задала имя маршрутизатору - R1. Уже привычка, сначала задать имя ус-ву:(
+```
 Router(config)#host
 Router(config)#hostname R1
 R1(config)#
+R1(config)#serv
+R1(config)#service pas
+R1(config)#service password-encryption
+R1(config)#
+R1(config)#ena
+R1(config)#enable sec
+R1(config)#enable secret class
+```
+#### e.	Назначьте cisco в качестве пароля консоли и включите вход в систему по паролю.
+```
+R1(config)#lin
+R1(config)#line con
+R1(config)#line console 0
+R1(config-line)#
+R1(config-line)#pas
+R1(config-line)#password cisco
+R1(config-line)#
+R1(config-line)#logi
+R1(config-line)#login 
+```
+
+#### f.	Назначьте cisco в качестве пароля VTY и включите вход в систему по паролю.
+```
+R1(config)#
+R1(config)#li
+R1(config)#lin
+R1(config)#line vt
+R1(config)#line vty 0 4
+R1(config-line)#
+R1(config-line)#pas
+R1(config-line)#password cisco
+R1(config-line)#
+```
+#### g.	Зашифруйте открытые пароли.
+>#### Также сделала заранее( В следующий раз буду внимательнее
+
+#### h.	Создайте баннер, который предупреждает о запрете несанкционированного доступа.
+```
+R1(config)#
+R1(config)#bann
+R1(config)#banner mo
+R1(config)#banner motd #STOP!!!#
+R1(config)#
+```
+#### i.	Настройте и активируйте на маршрутизаторе интерфейс G0/0/1, используя информацию, приведенную в таблице адресации.
+```
 R1(config)#int
 R1(config)#interface gi
 R1(config)#interface gigabitEthernet 0/1
@@ -51,43 +101,9 @@ R1(config-if)#
 R1(config-if)#
 R1(config-if)#serv
 R1(config-if)#exit
-R1(config)#serv
-R1(config)#service pas
-R1(config)#service password-encryption
-R1(config)#
-R1(config)#ena
-R1(config)#enable sec
-R1(config)#enable secret class
-R1(config)#
-R1(config)#bann
-R1(config)#banner mo
-R1(config)#banner motd #STOP!!!#
-R1(config)#
-R1(config)#lin
-R1(config)#line con
-R1(config)#line console 0
-R1(config-line)#
-R1(config-line)#pas
-R1(config-line)#password cisco
-R1(config-line)#
-R1(config-line)#logi
-R1(config-line)#login 
-R1(config-line)#
-R1(config-line)#logg
-R1(config-line)#logging sy
-R1(config-line)#logging synchronous 
-R1(config-line)#
-R1(config-line)#exit
-R1(config)#
-R1(config)#li
-R1(config)#lin
-R1(config)#line vt
-R1(config)#line vty 0 4
-R1(config-line)#
-R1(config-line)#pas
-R1(config-line)#password cisco
-R1(config-line)#
-R1(config-line)#exit
+```
+#### j.	Сохраните текущую конфигурацию в файл загрузочной конфигурации.
+```
 R1(config)#cop
 R1(config)#^Z
 R1#
@@ -103,7 +119,6 @@ Destination filename [startup-config]?
 Building configuration...
 [OK]
 R1#
-
 ```
 
 ### Шаг 4. Настройте компьютер PC-A.
@@ -111,12 +126,12 @@ R1#
 #### a.	Настройте для PC-A IP-адрес и маску подсети.
 #### b.	Настройте для PC-A шлюз по умолчанию.
 
-![](
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab5/img/PC-A.png?raw=true)
 
 ### Шаг 5. Проверьте подключение к сети.
 Пошлите с PC-A команду Ping на маршрутизатор R1. Если эхо-запрос с помощью команды ping не проходит, найдите и устраните неполадки подключения.
 
-![](
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab5/img/ping%20R1.jpg?raw=true)
 >#### Эхо-запрос прошел без проблем
 
 ## Часть 2. Настройка маршрутизатора для доступа по протоколу SSH
@@ -211,7 +226,7 @@ R1#
 #### a.	Запустите Tera Term с PC-A.
 #### b.	Установите SSH-подключение к R1. Use the username admin and password Adm1nP@55. У вас должно получиться установить SSH-подключение к R1.
 
-![](
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab5/img/ssh%20R1.jpg?raw=true)
 
 ## Часть 3. Настройка коммутатора для доступа по протоколу SSH
 
@@ -225,7 +240,7 @@ R1#
 #### f.	Назначьте cisco в качестве пароля VTY и включите вход в систему по паролю.
 #### g.	Зашифруйте открытые пароли.
 #### h.	Создайте баннер, который предупреждает о запрете несанкционированного доступа.
-
+>####Уффф, как много пунктов, можно выложу в 2 блока))))
 ```
 Switch>en
 Switch#
@@ -316,13 +331,12 @@ S1#
 
 #### a.	Настройте имя устройства, как указано в таблице адресации.
 >#### Задала имя на шаге 1)
-
 #### b.	Задайте домен для устройства.
 #### c.	Создайте ключ шифрования с указанием его длины.
 #### d.	Создайте имя пользователя в локальной базе учетных записей.
 #### e.	Активируйте протоколы Telnet и SSH на линиях VTY.
 #### f.	Измените способ входа в систему таким образом, чтобы использовалась проверка пользователей по локальной базе учетных записей.
-
+>#### Тут тоже сразу все сделала
 ```
 S1(config)#
 S1(config)#ip do
@@ -371,9 +385,11 @@ S1(config-line)#login local
 S1(config-line)#
 ```
 ### Шаг 3. Установите соединение с коммутатором по протоколу SSH.
-
 Запустите программу Tera Term на PC-A, затем установите подключение по протоколу SSH к интерфейсу SVI коммутатора S1.
-Т.к. Tera Term не обеспечивает шифрование данных, воспользуюсь 
+>Вместо Tera Term воспользуюсь командной сторокой
+
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab5/img/ssh%20S1.jpg?raw=true)
+
 >#### Удалось ли вам установить SSH-соединение с коммутатором?
 >Да, соединение по ssh установлено
 
@@ -505,45 +521,5 @@ Exec commands:
 R1#
 ```
 >С привилегированными правами доступны все возможные команды
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
