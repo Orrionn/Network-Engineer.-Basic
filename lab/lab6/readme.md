@@ -1,4 +1,4 @@
-
+c.	Назначьте все неиспользуемые порты коммутатора VLAN Parking_Lot, настройте их для статического режима доступа и административно деактивируйте их.
 S1#show vlan 
 
 VLAN Name                             Status    Ports
@@ -40,3 +40,29 @@ VLAN Name                             Status    Ports
 1003 token-ring-default               active    
 1004 fddinet-default                  active    
 1005 trnet-default                    active    
+
+
+a.	Назначьте используемые порты соответствующей VLAN (указанной в таблице VLAN выше) и настройте их для режима статического доступа.
+S1#sh vl
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/5
+10   Control                          active    
+20   Sales                            active    Fa0/6
+
+
+S2#sh vl
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1
+10   Control                          active    
+20   Sales                            active    
+30   Operations                       active    Fa0/18
+
+
+
+
+
+
