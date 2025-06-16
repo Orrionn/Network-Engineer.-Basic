@@ -129,3 +129,66 @@ Port        Vlans in spanning tree forwarding state and not pruned
 Fa0/1       10,20,30,1000
 
 
+
+c.	Проверка транкинга.
+S1#
+%SYS-5-CONFIG_I: Configured from console by console
+
+S1#sh in tr
+Port        Mode         Encapsulation  Status        Native vlan
+Fa0/1       on           802.1q         trunking      1000
+
+Port        Vlans allowed on trunk
+Fa0/1       10,20,30,1000
+
+Port        Vlans allowed and active in management domain
+Fa0/1       10,20,30,1000
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Fa0/1       10,20,30,1000
+
+После долгих мучений, я поняла, что интерфейс на роутере был выключен и коммутатор не смог поднять транк на порту FastEthernet0/5
+
+После назначила повторно и транк поднялся
+S1#sh in tr
+Port        Mode         Encapsulation  Status        Native vlan
+Fa0/1       on           802.1q         trunking      1000
+Fa0/5       on           802.1q         trunking      1000
+
+Port        Vlans allowed on trunk
+Fa0/1       10,20,30,1000
+Fa0/5       10,20,30,1000
+
+Port        Vlans allowed and active in management domain
+Fa0/1       10,20,30,1000
+Fa0/5       10,20,30,1000
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Fa0/1       10,20,30,1000
+Fa0/5       10,20,30,1000
+
+Что произойдет, если G0/0/1 на R1 будет отключен?
+
+Будет ситуация как у меня, описала чуть подробнее выше.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
