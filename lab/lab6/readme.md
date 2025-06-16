@@ -173,10 +173,25 @@ Fa0/5       10,20,30,1000
 
 
 
+a.	При необходимости активируйте интерфейс G0/0/1 на маршрутизаторе.
+
+R1(config)#interface g
+R1(config)#interface gigabitEthernet 0/1
+R1(config-if)#no sh
+R1(config-if)#no shutdown 
 
 
-
-
+c.	Убедитесь, что вспомогательные интерфейсы работают
+R1#show ip interface brief 
+Interface              IP-Address      OK? Method Status                Protocol 
+GigabitEthernet0/0     unassigned      YES unset  administratively down down 
+GigabitEthernet0/1     unassigned      YES unset  up                    up 
+GigabitEthernet0/1.10  192.168.10.1    YES manual up                    up 
+GigabitEthernet0/1.20  192.168.20.1    YES manual up                    up 
+GigabitEthernet0/1.30  192.168.30.1    YES manual up                    up 
+GigabitEthernet0/1.1000 unassigned      YES unset  up                    up 
+GigabitEthernet0/2     unassigned      YES unset  administratively down down 
+Vlan1                  unassigned      YES unset  administratively down down
 
 
 
