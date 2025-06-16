@@ -43,6 +43,23 @@ VLAN Name                             Status    Ports
 
 
 a.	Назначьте используемые порты соответствующей VLAN (указанной в таблице VLAN выше) и настройте их для режима статического доступа.
+
+S1# conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+S1(config)#in
+S1(config)#interface f
+S1(config)#interface fastEthernet 0/6
+S1(config-if)#sw
+S1(config-if)#switchport m
+S1(config-if)#switchport mode ac
+S1(config-if)#switchport mode access 
+S1(config-if)#sw
+S1(config-if)#switchport ac
+S1(config-if)#switchport access vlan 20
+S1(config-if)#^Z
+S1#
+%SYS-5-CONFIG_I: Configured from console by console
+
 S1#sh vl
 
 VLAN Name                             Status    Ports
@@ -51,8 +68,24 @@ VLAN Name                             Status    Ports
 10   Control                          active    
 20   Sales                            active    Fa0/6
 
+S2#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+S2(config)#int
+S2(config)#interface f
+S2(config)#interface fastEthernet 0/18
+S2(config-if)#sw
+S2(config-if)#switchport m
+S2(config-if)#switchport mode a
+S2(config-if)#switchport mode access 
+S2(config-if)#sw
+S2(config-if)#switchport a
+S2(config-if)#switchport access v
+S2(config-if)#switchport access vlan 30
+S2(config-if)#^Z
+S2#
+%SYS-5-CONFIG_I: Configured from console by console
 
-S2#sh vl
+S2#shvl
 
 VLAN Name                             Status    Ports
 ---- -------------------------------- --------- -------------------------------
