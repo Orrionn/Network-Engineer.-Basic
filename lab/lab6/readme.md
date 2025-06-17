@@ -1,4 +1,325 @@
-c.	Назначьте все неиспользуемые порты коммутатора VLAN Parking_Lot, настройте их для статического режима доступа и административно деактивируйте их.
+# Лабораторная работа - Внедрение маршрутизации между виртуальными локальными сетями 
+## Задачи
+
+### Часть 1. Создание сети и настройка основных параметров устройства
+### Часть 2. Создание сетей VLAN и назначение портов коммутатора
+### Часть 3. Настройка транка 802.1Q между коммутаторами.
+### Часть 4. Настройка маршрутизации между сетями VLAN
+### Часть 5. Проверка, что маршрутизация между VLAN работает
+
+
+## Часть 1. Создание сети и настройка основных параметров устройства
+В первой части лабораторной работы вам предстоит создать топологию сети и настроить базовые параметры для узлов ПК и коммутаторов.
+
+### Шаг 1. Создайте сеть согласно топологии.
+Подключите устройства, как показано в топологии, и подсоедините необходимые кабели.
+
+![](
+
+### Шаг 2. Настройте базовые параметры для маршрутизатора.
+#### a.	Подключитесь к маршрутизатору с помощью консоли и активируйте привилегированный режим EXEC.
+Откройте окно конфигурации
+#### b.	Войдите в режим конфигурации.
+#### c.	Назначьте маршрутизатору имя устройства.
+#### d.	Отключите поиск DNS, чтобы предотвратить попытки маршрутизатора неверно преобразовывать введенные команды таким образом, как будто они являются именами узлов.
+
+#### e.	Назначьте class в качестве зашифрованного пароля привилегированного режима EXEC.
+#### f.	Назначьте cisco в качестве пароля консоли и включите вход в систему по паролю.
+#### g.	Установите cisco в качестве пароля виртуального терминала и активируйте вход.
+#### h.	Зашифруйте открытые пароли.
+#### i.	Создайте баннер с предупреждением о запрете несанкционированного доступа к устройству.
+#### j.	Сохраните текущую конфигурацию в файл загрузочной конфигурации.
+#### k.	Настройте на маршрутизаторе время.
+```
+Router>
+Router>en
+Router#
+Router#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Router(config)#hos
+Router(config)#hostname R1
+R1(config)#ser
+R1(config)#service pas
+R1(config)#service password-encryption 
+R1(config)#ena
+R1(config)#enable se
+R1(config)#enable secret class
+R1(config)#banner m
+R1(config)#banner motd #NOOO STOP#
+R1(config)#lin
+R1(config)#line con
+R1(config)#line console 0
+R1(config-line)#pas
+R1(config-line)#password cisco
+R1(config-line)#login
+R1(config-line)#logg
+R1(config-line)#logging sy
+R1(config-line)#logging synchronous 
+R1(config-line)#exit
+R1(config)#no i
+R1(config)#no ip domain-l
+R1(config)#no ip domain-lookup 
+R1(config)#li
+R1(config)#line
+R1(config)#line vt
+R1(config)#line vty 0 4
+R1(config-line)#
+R1(config-line)#pas
+R1(config-line)#password cisco
+R1(config-line)#^Z
+R1#
+%SYS-5-CONFIG_I: Configured from console by console
+
+R1#cop
+R1#copy r
+R1#copy running-config st
+R1#copy running-config startup-config 
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+R1#
+```
+
+### Шаг 3. Настройте базовые параметры каждого коммутатора.
+
+#### a.	Присвойте коммутатору имя устройства.
+#### b.	Отключите поиск DNS, чтобы предотвратить попытки маршрутизатора неверно преобразовывать введенные команды таким образом, как будто они являются именами узлов.
+#### c.	Назначьте class в качестве зашифрованного пароля привилегированного режима EXEC.
+#### d.	Назначьте cisco в качестве пароля консоли и включите вход в систему по паролю.
+#### e.	Установите cisco в качестве пароля виртуального терминала и активируйте вход.
+#### f.	Зашифруйте открытые пароли.
+#### g.	Создайте баннер с предупреждением о запрете несанкционированного доступа к устройству.
+#### h.	Настройте на коммутаторах время.
+#### i.	Сохранение текущей конфигурации в качестве начальной.
+
+>#### Коммутатор S1
+```
+Switch>en
+Switch#
+Switch#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Switch(config)#hos
+Switch(config)#hostname S1
+S1(config)#ser
+S1(config)#service pa
+S1(config)#service password-encryption 
+S1(config)#enab
+S1(config)#enable sec
+S1(config)#enable secret class
+S1(config)#ban
+S1(config)#banner mo
+S1(config)#banner motd #NOO STOP#
+S1(config)#li
+S1(config)#line co
+S1(config)#line console 0
+S1(config-line)#pas
+S1(config-line)#password cisco
+S1(config-line)#logi
+S1(config-line)#login 
+S1(config-line)#logging sy
+S1(config-line)#logging synchronous 
+S1(config-line)#
+S1(config-line)#exit
+S1(config)#no ip domain-l
+S1(config)#no ip domain-lookup 
+S1(config)#
+S1(config)#lin
+S1(config)#line vt
+S1(config)#line vty 0 4
+S1(config-line)#pas
+S1(config-line)#password cisco
+S1(config-line)#^Z
+S1#
+%SYS-5-CONFIG_I: Configured from console by console
+
+S1#clo
+S1#clock se
+S1#clock set 13:32:00 16 june 2025
+S1#sh
+S1#show clock 
+13:32:6.404 UTC Mon Jun 16 2025
+S1#cop
+S1#copy r
+S1#copy running-config st
+S1#copy running-config startup-config 
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+S1#
+```
+>#### Коммутатор S2
+```
+Switch>en
+Switch#
+Switch#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+Switch(config)#ho
+Switch(config)#hostname S2
+S2(config)#sec
+S2(config)#ser
+S2(config)#service pas
+S2(config)#service password-encryption 
+S2(config)#en
+S2(config)#ena
+S2(config)#enable se
+S2(config)#enable secret class
+S2(config)#ban
+S2(config)#banner mo
+S2(config)#banner motd #NOO STOP#
+S2(config)#
+S2(config)#lin
+S2(config)#line co
+S2(config)#line console 0
+S2(config-line)#
+S2(config-line)#pas
+S2(config-line)#password cisco
+S2(config-line)#
+S2(config-line)#logi
+S2(config-line)#login 
+S2(config-line)#logg
+S2(config-line)#logging sy
+S2(config-line)#logging synchronous 
+S2(config-line)#exit
+S2(config)#lin
+S2(config)#line vt
+S2(config)#line vty 0 4
+S2(config-line)#pas
+S2(config-line)#password cisco
+S2(config-line)#exit
+S2(config)#no ip domain-l
+S2(config)#no ip domain-lookup 
+S2(config)#
+S2(config)#^Z
+S2#
+%SYS-5-CONFIG_I: Configured from console by console
+
+S2#cl
+S2#clo
+S2#clock se
+S2#clock set 13:39:00 16 june 2025
+S2#clo
+S2#sh
+S2#show cl
+S2#show clock 
+13:39:8.615 UTC Mon Jun 16 2025
+S2#cop
+S2#copy ru
+S2#copy running-config st
+S2#copy running-config startup-config 
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+```
+
+### Шаг 4. Настройте узлы ПК.
+Адреса ПК можно посмотреть в таблице адресации.
+
+![](
+
+![](
+
+## Часть 2. Создание сетей VLAN и назначение портов коммутатора
+Во второй части вы создадите VLAN, как указано в таблице выше, на обоих коммутаторах. Затем вы назначите VLAN соответствующему интерфейсу и проверите настройки конфигурации. Выполните следующие задачи на каждом коммутаторе.
+
+### Шаг 1. Создайте сети VLAN на коммутаторах.
+#### a.	Создайте и назовите необходимые VLAN на каждом коммутаторе из таблицы выше.
+
+```
+S1#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+S1(config)#vlan 10
+S1(config-vlan)#nam
+S1(config-vlan)#name Control
+S1(config-vlan)#exit
+S1(config)#vlan 20
+S1(config-vlan)#na
+S1(config-vlan)#name Sales
+S1(config-vlan)#exit
+S1(config)#vlan 30
+S1(config-vlan)#na
+S1(config-vlan)#name Operations
+S1(config-vlan)#exit
+S1(config)#vlan 999
+S1(config-vlan)#na
+S1(config-vlan)#name Parking_Lot
+S1(config-vlan)#exit
+S1(config)#vlan 1000
+S1(config-vlan)#na
+S1(config-vlan)#name Native
+S1(config-vlan)#
+S1(config-vlan)#exit
+S1(config)#
+```
+
+```
+S2#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+S2(config)#vl
+S2(config)#vlan 10
+S2(config-vlan)#na
+S2(config-vlan)#name Control 
+S2(config-vlan)#vlan 20
+S2(config-vlan)#na
+S2(config-vlan)#name Sales
+S2(config-vlan)#exit
+S2(config)#vlan 30
+S2(config-vlan)#na
+S2(config-vlan)#name 
+S2(config-vlan)#name Operations
+S2(config-vlan)#exit
+S2(config)#vlan 999
+S2(config-vlan)#na
+S2(config-vlan)#name Parking_Lot
+S2(config-vlan)#exit
+S2(config)#vlan 1000
+S2(config-vlan)#na
+S2(config-vlan)#name Native
+S2(config-vlan)#exit
+```
+#### b.	Настройте интерфейс управления и шлюз по умолчанию на каждом коммутаторе, используя информацию об IP-адресе в таблице адресации. 
+>#### Настройка первого коммутатора
+```
+S1(config-if)#ip ad
+S1(config-if)#ip address 192.168.10.11 255.255.255.0
+S1(config-if)#ip de
+S1(config-if)#exit
+S1(config)#ip de
+S1(config)#ip default-gateway 192.168.10.1
+S1(config)#
+```
+>#### Настройка второго коммутатора
+```
+S2(config-if)#ip ad
+S2(config-if)#ip address 192.168.10.12 255.255.255.0
+S2(config-if)#exit
+S2(config)#ip de
+S2(config)#ip default-gateway 192.168.10.1
+S2(config)#
+```
+
+#### c.	Назначьте все неиспользуемые порты коммутатора VLAN Parking_Lot, настройте их для статического режима доступа и административно деактивируйте их.
+
+>####Сделаю для S1 с проверкой 
+```
+S1(config)#in
+S1(config)#interface ra
+S1(config)#interface range fa
+S1(config)#interface range fastEthernet 0/2-4,f
+S1(config)#interface range fastEthernet 0/2-4,f0/7-24, g
+S1(config)#interface range fastEthernet 0/2-4,f0/7-24, gigabitEthernet 0/1-2
+S1(config-if-range)#sw
+S1(config-if-range)#switchport m
+S1(config-if-range)#switchport mode ac
+S1(config-if-range)#switchport mode access 
+S1(config-if-range)#sw
+S1(config-if-range)#switchport ac
+S1(config-if-range)#switchport access vl
+S1(config-if-range)#switchport access vlan 999
+S1(config-if-range)#sh
+S1(config-if-range)#shutdown
+```
+>#### Проверка настроек на S1
+```
 S1#show vlan 
 
 VLAN Name                             Status    Ports
@@ -18,8 +339,26 @@ VLAN Name                             Status    Ports
 1003 token-ring-default               active    
 1004 fddinet-default                  active    
 1005 trnet-default                    active    
-
-
+```
+>#### Теперь для S2
+```
+S2(config-if)#
+S2(config-if)#interface range f
+S2(config-if)#interface range f0/2-17, f0/19-24, g
+S2(config-if)#interface range f0/2-17, f0/19-24, g0/1-2
+S2(config-if-range)#sw
+S2(config-if-range)#switchport mo
+S2(config-if-range)#switchport mode ac
+S2(config-if-range)#switchport mode access 
+S2(config-if-range)#sw
+S2(config-if-range)#switchport ac
+S2(config-if-range)#switchport access vl
+S2(config-if-range)#switchport access vlan 999
+S2(config-if-range)#sh
+S2(config-if-range)#shutdown 
+```
+>#### Проверка на S2
+```
 S2#show vl
 S2#show vlan 
 
@@ -40,7 +379,7 @@ VLAN Name                             Status    Ports
 1003 token-ring-default               active    
 1004 fddinet-default                  active    
 1005 trnet-default                    active    
-
+```
 
 a.	Назначьте используемые порты соответствующей VLAN (указанной в таблице VLAN выше) и настройте их для режима статического доступа.
 
@@ -265,4 +604,4 @@ Trace complete.
 
 Какие промежуточные IP-адреса отображаются в результатах?
 
-Ответ: В промежуточных адресах мы видим ip-адрес подинтерфейса g0/0/1.30 маршрутизатора R1. Он же является шлюзом для компьютера PC-B.
+Ответ: Мы видим шлюз по умолчанию PC-B и он же ip-адрес подинтерфейса G0/0/1.30 маршрутизатора R1.
