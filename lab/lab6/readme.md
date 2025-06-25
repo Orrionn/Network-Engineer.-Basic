@@ -14,7 +14,7 @@
 ### Шаг 1. Создайте сеть согласно топологии.
 Подключите устройства, как показано в топологии, и подсоедините необходимые кабели.
 
-![](
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab6/img/topology.png?raw=true)
 
 ### Шаг 2. Настройте базовые параметры для маршрутизатора.
 #### a.	Подключитесь к маршрутизатору с помощью консоли и активируйте привилегированный режим EXEC.
@@ -214,9 +214,13 @@ Building configuration...
 ### Шаг 4. Настройте узлы ПК.
 Адреса ПК можно посмотреть в таблице адресации.
 
-![](
+>#### Настройка PC-A
 
-![](
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab6/img/PC-A.png?raw=true)
+
+>#### Настройка PC-B
+
+![](https://github.com/Orrionn/Network-Engineer.-Basic/blob/main/lab/lab6/img/PC-B.png?raw=true)
 
 ## Часть 2. Создание сетей VLAN и назначение портов коммутатора
 Во второй части вы создадите VLAN, как указано в таблице выше, на обоих коммутаторах. Затем вы назначите VLAN соответствующему интерфейсу и проверите настройки конфигурации. Выполните следующие задачи на каждом коммутаторе.
@@ -299,7 +303,7 @@ S2(config)#
 
 #### c.	Назначьте все неиспользуемые порты коммутатора VLAN Parking_Lot, настройте их для статического режима доступа и административно деактивируйте их.
 
->####Сделаю для S1 с проверкой 
+>#### Назначаем неиспользуемые порты VLAN Parking_Lot на коммутаторе S1 
 ```
 S1(config)#in
 S1(config)#interface ra
@@ -340,7 +344,7 @@ VLAN Name                             Status    Ports
 1004 fddinet-default                  active    
 1005 trnet-default                    active    
 ```
->#### Теперь для S2
+>#### Тоже самое для S2
 ```
 S2(config-if)#
 S2(config-if)#interface range f
@@ -381,8 +385,11 @@ VLAN Name                             Status    Ports
 1005 trnet-default                    active    
 ```
 
-a.	Назначьте используемые порты соответствующей VLAN (указанной в таблице VLAN выше) и настройте их для режима статического доступа.
+### Шаг 2. Назначьте сети VLAN соответствующим интерфейсам коммутатора.
 
+a.	Назначьте используемые порты соответствующей VLAN (указанной в таблице VLAN выше) и настройте их для режима статического доступа.
+>#### Назначим для S1
+```
 S1# conf t
 Enter configuration commands, one per line.  End with CNTL/Z.
 S1(config)#in
@@ -398,19 +405,11 @@ S1(config-if)#switchport access vlan 20
 S1(config-if)#^Z
 S1#
 %SYS-5-CONFIG_I: Configured from console by console
-
-
-b. Убедитесь, что VLAN назначены на правильные интерфейсы.
-S1#sh vl
-
-VLAN Name                             Status    Ports
----- -------------------------------- --------- -------------------------------
-1    default                          active    Fa0/1, Fa0/5
-10   Control                          active    
-20   Sales                            active    Fa0/6
-
+```
+>#### Назначим для S2
+```
 S2#conf t
-Enter configuration commands, one per line.  End with CNTL/Z.
+Enter configuration commands, one per line. End with CNTL/Z.
 S2(config)#int
 S2(config)#interface f
 S2(config)#interface fastEthernet 0/18
@@ -422,10 +421,21 @@ S2(config-if)#sw
 S2(config-if)#switchport a
 S2(config-if)#switchport access v
 S2(config-if)#switchport access vlan 30
-S2(config-if)#^Z
-S2#
-%SYS-5-CONFIG_I: Configured from console by console
+```
 
+#### b. Убедитесь, что VLAN назначены на правильные интерфейсы.
+>#### Сделаем проверку командой show vlan для S1 
+```
+S1#sh vl
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/5
+10   Control                          active    
+20   Sales                            active    Fa0/6
+```
+>#### Проверим для S2
+```
 S2#shvl
 
 VLAN Name                             Status    Ports
@@ -434,10 +444,83 @@ VLAN Name                             Status    Ports
 10   Control                          active    
 20   Sales                            active    
 30   Operations                       active    Fa0/18
+```
 
+## Часть 3. Конфигурация магистрального канала стандарта 802.1Q между коммутаторами
 
+В части 3 вы вручную настроите интерфейс F0/1 как транк.
 
-d.	Проверьте транки, native VLAN и разрешенные VLAN через транк.
+### Шаг 1. Вручную настройте магистральный интерфейс F0/1 на коммутаторах S1 и S2.
+
+#### a.	Настройка статического транкинга на интерфейсе F0/1 для обоих коммутаторов.
+
+>#### Настроим транк на S1
+```
+S1(config)#int
+S1(config)#interface f0/1
+S1(config-if)#sw
+S1(config-if)#switchport mo
+S1(config-if)#switchport mode tr
+S1(config-if)#switchport mode trunk
+```
+>#### Настроим на S2
+```
+S2(config)#in
+S2(config)#interface f0/1
+S2(config-if)#sw
+S2(config-if)#switchport m
+S2(config-if)#switchport mode tr
+S2(config-if)#switchport mode trunk
+```
+#### b.	Установите native VLAN 1000 на обоих коммутаторах.
+>#### Настраиваем нативный VLAN для S1
+```
+S1(config-if)#sw
+S1(config-if)#switchport tr
+S1(config-if)#switchport trunk n
+S1(config-if)#switchport trunk native v
+S1(config-if)#switchport trunk native vlan 1000
+S1(config-if)#%SPANTREE-2-UNBLOCK_CONSIST_PORT: Unblocking FastEthernet0/1 on VLAN1000. Port consistency restored.
+
+%SPANTREE-2-UNBLOCK_CONSIST_PORT: Unblocking FastEthernet0/1 on VLAN0001. Port consistency restored.
+
+S1(config-if)#
+```
+>#### Нативный VLAN для S2
+```
+S2(config-if)#sw
+S2(config-if)#switchport tr
+S2(config-if)#switchport trunk n
+S2(config-if)#switchport trunk native vlan 1000
+S2(config-if)#
+%CDP-4-NATIVE_VLAN_MISMATCH: Native VLAN mismatch discovered on FastEthernet0/1 (1000), with S1 FastEthernet0/1 (1).
+
+S2(config-if)#
+```
+
+#### c.	Укажите, что VLAN 10, 20, 30 и 1000 могут проходить по транку.
+>#### Указываем для S1
+```
+S1(config-if)#sw
+S1(config-if)#switchport tr
+S1(config-if)#switchport trunk al
+S1(config-if)#switchport trunk allowed vl
+S1(config-if)#switchport trunk allowed vlan 10,20,30,1000
+S1(config-if)#
+```
+>#### Указываем для S2
+```
+S2(config-if)#sw
+S2(config-if)#switchport tr
+S2(config-if)#switchport trunk al
+S2(config-if)#switchport trunk allowed vl
+S2(config-if)#switchport trunk allowed vlan 10,20,30,1000
+S2(config-if)#
+```
+
+#### d.	Проверьте транки, native VLAN и разрешенные VLAN через транк.
+>#### Для S1
+```
 S1#sh interfaces tr
 S1#sh interfaces trunk 
 Port        Mode         Encapsulation  Status        Native vlan
@@ -451,9 +534,9 @@ Fa0/1       10,20,30,1000
 
 Port        Vlans in spanning tree forwarding state and not pruned
 Fa0/1       10,20,30,1000
-
-
-
+```
+>#### Для S2
+```
 S2#sh in
 S2#sh interfaces tr
 S2#sh interfaces trunk 
@@ -468,10 +551,40 @@ Fa0/1       10,20,30,1000
 
 Port        Vlans in spanning tree forwarding state and not pruned
 Fa0/1       10,20,30,1000
+```
 
+### Шаг 2. Вручную настройте магистральный интерфейс F0/5 на коммутаторе S1.
 
+#### a.	Настройте интерфейс S1 F0/5 с теми же параметрами транка, что и F0/1. Это транк до маршрутизатора.
+```
+S1(config)#interface f0/5
+S1(config-if)#sw
+S1(config-if)#switchport m
+S1(config-if)#switchport mode tr
+S1(config-if)#switchport mode trunk 
+S1(config-if)#sw
+S1(config-if)#switchport tr
+S1(config-if)#switchport trunk na
+S1(config-if)#switchport trunk native vl
+S1(config-if)#switchport trunk native vlan 1000
+S1(config-if)#sw
+S1(config-if)#switchport tr al v
+S1(config-if)#switchport tr al vlan 10,20,30,1000
+S1(config-if)#
+```
 
-c.	Проверка транкинга.
+#### b.	Сохраните текущую конфигурацию в файл загрузочной конфигурации.
+```
+S1#copy ru
+S1#copy running-config st
+S1#copy running-config startup-config 
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+```
+
+#### c.	Проверка транкинга.
+```
 S1#
 %SYS-5-CONFIG_I: Configured from console by console
 
@@ -487,10 +600,10 @@ Fa0/1       10,20,30,1000
 
 Port        Vlans in spanning tree forwarding state and not pruned
 Fa0/1       10,20,30,1000
-
-После долгих мучений, я поняла, что интерфейс на роутере был выключен и коммутатор не смог поднять транк на порту FastEthernet0/5
-
-После назначила повторно и транк поднялся
+```
+>#### После долгих мучений, я поняла, что интерфейс на роутере был выключен и коммутатор не смог поднять транк на FastEthernet0/5
+>#### После назначила повторно и транк поднялся
+```
 S1#sh in tr
 Port        Mode         Encapsulation  Status        Native vlan
 Fa0/1       on           802.1q         trunking      1000
@@ -507,22 +620,79 @@ Fa0/5       10,20,30,1000
 Port        Vlans in spanning tree forwarding state and not pruned
 Fa0/1       10,20,30,1000
 Fa0/5       10,20,30,1000
+```
 
-Что произойдет, если G0/0/1 на R1 будет отключен?
-
-Будет ситуация как у меня, описала чуть подробнее выше.
-
+>#### Что произойдет, если G0/0/1 на R1 будет отключен?
+> Транк до маршрутизатора не поднимется
 
 
-a.	При необходимости активируйте интерфейс G0/0/1 на маршрутизаторе.
+## Часть 4. Настройка маршрутизации между сетями VLAN
 
+### Шаг 1. Настройте маршрутизатор.
+
+#### a.	При необходимости активируйте интерфейс G0/0/1 на маршрутизаторе.
+>#### Настраиваем интерфейсы для VLAN 10, 20, 30 и для нативного VLAN
+```
 R1(config)#interface g
 R1(config)#interface gigabitEthernet 0/1
 R1(config-if)#no sh
 R1(config-if)#no shutdown 
+```
+#### b.	Настройте подинтерфейсы для каждой VLAN, как указано в таблице IP-адресации. Все подинтерфейсы используют инкапсуляцию 802.1Q. Убедитесь, что подинтерфейсу для native VLAN не назначен IP-адрес. Включите описание для каждого подинтерфейса.
+```
+R1#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+R1(config)#interface gigabitEthernet 0/1.10
+R1(config-subif)#
+%LINK-5-CHANGED: Interface GigabitEthernet0/1.10, changed state to up
 
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/1.10, changed state to up
 
-c.	Убедитесь, что вспомогательные интерфейсы работают
+R1(config-subif)#en
+R1(config-subif)#encapsulation do
+R1(config-subif)#encapsulation dot1Q 10
+R1(config-subif)#ip ad
+R1(config-subif)#ip address 192.168.10.1 255.255.255.0
+R1(config-subif)#exit
+R1(config)#interface gigabitEthernet 0/1.20
+R1(config-subif)#
+%LINK-5-CHANGED: Interface GigabitEthernet0/1.20, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/1.20, changed state to up
+
+R1(config-subif)#en
+R1(config-subif)#encapsulation do
+R1(config-subif)#encapsulation dot1Q 20
+R1(config-subif)#ip ad
+R1(config-subif)#ip address 192.168.20.1 255.255.255.0
+R1(config-subif)#interface gigabitEthernet 0/1.30
+R1(config-subif)#
+%LINK-5-CHANGED: Interface GigabitEthernet0/1.30, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/1.30, changed state to up
+
+R1(config-subif)#en
+R1(config-subif)#encapsulation do
+R1(config-subif)#encapsulation dot1Q 30
+R1(config-subif)#ip ad
+R1(config-subif)#ip ad 192.168.30.1 255.255.255.0
+R1(config-subif)#exit
+R1(config)#int
+R1(config)#interface g
+R1(config)#interface gigabitEthernet 0/1.1000
+R1(config-subif)#
+%LINK-5-CHANGED: Interface GigabitEthernet0/1.1000, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/1.1000, changed state to up
+
+R1(config-subif)#en
+R1(config-subif)#encapsulation do
+R1(config-subif)#encapsulation dot1Q 1000 na
+R1(config-subif)#encapsulation dot1Q 1000 native
+```
+
+#### c.	Убедитесь, что вспомогательные интерфейсы работают
+```
 R1#show ip interface brief 
 Interface              IP-Address      OK? Method Status                Protocol 
 GigabitEthernet0/0     unassigned      YES unset  administratively down down 
@@ -533,12 +703,16 @@ GigabitEthernet0/1.30  192.168.30.1    YES manual up                    up
 GigabitEthernet0/1.1000 unassigned      YES unset  up                    up 
 GigabitEthernet0/2     unassigned      YES unset  administratively down down 
 Vlan1                  unassigned      YES unset  administratively down down
+```
 
+## Часть 5. Проверьте, работает ли маршрутизация между VLAN
 
+### Шаг 1. Выполните следующие тесты с PC-A. Все должно быть успешно.
 
+Примечание. Возможно, вам придется отключить брандмауэр ПК для работы ping
 
-a.	Отправьте эхо-запрос с PC-A на шлюз по умолчанию.
-
+#### a.	Отправьте эхо-запрос с PC-A на шлюз по умолчанию.
+```
 C:\>ping 192.168.20.1
 
 Pinging 192.168.20.1 with 32 bytes of data:
@@ -552,10 +726,10 @@ Ping statistics for 192.168.20.1:
     Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
 Approximate round trip times in milli-seconds:
     Minimum = 0ms, Maximum = 1ms, Average = 0ms
+```
 
-
-b.	Отправьте эхо-запрос с PC-A на PC-B.
-
+#### b.	Отправьте эхо-запрос с PC-A на PC-B.
+```
 C:\>ping 192.168.30.3
 
 Pinging 192.168.30.3 with 32 bytes of data:
@@ -569,11 +743,11 @@ Ping statistics for 192.168.30.3:
     Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
 Approximate round trip times in milli-seconds:
     Minimum = 0ms, Maximum = 0ms, Average = 0ms
+```
 
 
-
-c.	Отправьте команду ping с компьютера PC-A на коммутатор S2.
-
+#### c.	Отправьте команду ping с компьютера PC-A на коммутатор S2.
+```
 C:\>ping 192.168.10.12
 
 Pinging 192.168.10.12 with 32 bytes of data:
@@ -587,11 +761,14 @@ Ping statistics for 192.168.10.12:
     Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
 Approximate round trip times in milli-seconds:
     Minimum = 0ms, Maximum = 0ms, Average = 0ms
+```
 
-
+## Шаг 2. Пройдите следующий тест с PC-B
 
 В окне командной строки на PC-B выполните команду tracert на адрес PC-A.
-
+>#### Какие промежуточные IP-адреса отображаются в результатах?
+>
+```
 C:\>tracert 192.168.20.3
 
 Tracing route to 192.168.20.3 over a maximum of 30 hops: 
@@ -600,8 +777,5 @@ Tracing route to 192.168.20.3 over a maximum of 30 hops:
   2   0 ms      0 ms      1 ms      192.168.20.3
 
 Trace complete.
-
-
-Какие промежуточные IP-адреса отображаются в результатах?
-
-Ответ: Мы видим шлюз по умолчанию PC-B и он же ip-адрес подинтерфейса G0/0/1.30 маршрутизатора R1.
+```
+> Мы видим шлюз по умолчанию PC-B и он же ip-адрес подинтерфейса G0/0/1.30 маршрутизатора R1.
